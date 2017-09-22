@@ -34,10 +34,12 @@ module Confidante
     end
 
     def method_missing(method, *args, &block)
-      full_scope = {cwd: Dir.pwd}
-                       .merge(@scope)
-                       .merge({overrides: @overrides})
-      @hiera.lookup(method.to_s, nil, full_scope)
+      @hiera.lookup(
+          method.to_s,
+          nil,
+          {cwd: Dir.pwd}
+              .merge(@scope)
+              .merge({overrides: @overrides}))
     end
   end
 end
