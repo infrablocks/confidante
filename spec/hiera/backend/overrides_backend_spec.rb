@@ -66,6 +66,19 @@ describe Hiera::Backend::Overrides_backend do
     }.to(throw_symbol(:no_such_key))
   end
 
+  it 'throws if no overrides are available' do
+    overrides_backend = Hiera::Backend::Overrides_backend.new
+
+    key = 'some_thing'
+    scope = {
+        'role' => 'mail_server'
+    }
+
+    expect {
+      overrides_backend.lookup(key, scope, nil, :priority, nil)
+    }.to(throw_symbol(:no_such_key))
+  end
+
   def stub_hiera
     allow(Hiera).to(receive(:debug))
   end
