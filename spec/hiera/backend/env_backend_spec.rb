@@ -20,7 +20,7 @@ describe Hiera::Backend::Env_backend do
     env_backend = Hiera::Backend::Env_backend.new
 
     key = 'some_thing'
-    scope = {role: 'mail_server'}
+    scope = {'role' => 'mail_server'}
     resolution_type = :priority
 
     env_backend.lookup(key, scope, nil, resolution_type, nil)
@@ -36,7 +36,7 @@ describe Hiera::Backend::Env_backend do
     key = 'some_thing'
     env_value = 'unprocessed-value'
     processed_value = 'processed-value'
-    scope = {role: 'mail_server'}
+    scope = {'role' => 'mail_server'}
 
     allow(ENV)
         .to(receive(:[])
@@ -56,7 +56,7 @@ describe Hiera::Backend::Env_backend do
     env_backend = Hiera::Backend::Env_backend.new
 
     key = 'some_thing'
-    scope = {role: 'mail_server'}
+    scope = {'role' => 'mail_server'}
 
     allow(ENV)
         .to(receive(:[])

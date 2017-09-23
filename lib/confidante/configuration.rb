@@ -37,9 +37,9 @@ module Confidante
       @hiera.lookup(
           method.to_s,
           nil,
-          {cwd: Dir.pwd}
-              .merge(@scope)
-              .merge({overrides: @overrides}))
+          {'cwd' => Dir.pwd}
+              .merge(@scope.stringify_keys)
+              .merge({'overrides' => @overrides.stringify_keys}))
     end
   end
 end

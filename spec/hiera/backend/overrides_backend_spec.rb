@@ -4,7 +4,6 @@ describe Hiera::Backend::Overrides_backend do
   before(:each) do
     stub_hiera
     stub_backend
-    stub_env
   end
 
   it 'logs on initialization' do
@@ -20,7 +19,7 @@ describe Hiera::Backend::Overrides_backend do
     overrides_backend = Hiera::Backend::Overrides_backend.new
 
     key = 'some_thing'
-    scope = {role: 'mail_server', overrides: {some_thing: 'value'}}
+    scope = {'role' => 'mail_server', 'overrides' => {'some_thing' => 'value'}}
     resolution_type = :priority
 
     overrides_backend.lookup(key, scope, nil, resolution_type, nil)
@@ -37,9 +36,9 @@ describe Hiera::Backend::Overrides_backend do
     overrides_value = 'unprocessed-value'
     processed_value = 'processed-value'
     scope = {
-        role: 'mail_server',
-        overrides: {
-            some_thing: overrides_value
+        'role' => 'mail_server',
+        'overrides' => {
+            'some_thing' => overrides_value
         }
     }
 
@@ -58,8 +57,8 @@ describe Hiera::Backend::Overrides_backend do
 
     key = 'some_thing'
     scope = {
-        role: 'mail_server',
-        overrides: {}
+        'role' => 'mail_server',
+        'overrides' => {}
     }
 
     expect {
@@ -73,9 +72,5 @@ describe Hiera::Backend::Overrides_backend do
 
   def stub_backend
     allow(Hiera::Backend).to(receive(:parse_answer))
-  end
-
-  def stub_env
-    allow(ENV).to(receive(:[]).and_return('value'))
   end
 end

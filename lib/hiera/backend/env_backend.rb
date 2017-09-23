@@ -12,7 +12,7 @@ class Hiera
             "Looking up #{key} in environment backend with #{resolution_type}")
 
         Backend.parse_answer(
-            ENV[key.upcase] || throw(:no_such_key),
+            ENV[key.to_s.upcase] || throw(:no_such_key),
             scope)
       end
     end

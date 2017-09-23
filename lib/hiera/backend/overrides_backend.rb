@@ -12,7 +12,7 @@ class Hiera
             "Looking up #{key} in overrides backend with #{resolution_type}")
 
         Backend.parse_answer(
-            scope[:overrides][key.to_sym] || throw(:no_such_key),
+            scope['overrides'][key.to_s] || throw(:no_such_key),
             scope)
       end
     end

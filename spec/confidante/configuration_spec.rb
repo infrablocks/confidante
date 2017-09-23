@@ -24,12 +24,12 @@ describe Confidante::Configuration do
                     'some_important_value',
                     nil,
                     {
-                        cwd: Dir.pwd,
-                        role: 'server',
-                        environment: 'production',
-                        overrides: {
-                            thing1: 'value1',
-                            thing2: 'value2'
+                        'cwd' => Dir.pwd,
+                        'role' => 'server',
+                        'environment' => 'production',
+                        'overrides' => {
+                            'thing1' => 'value1',
+                            'thing2' => 'value2'
                         }
                     }))
   end
