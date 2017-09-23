@@ -4,7 +4,7 @@ require 'active_support/core_ext/hash/keys'
 
 module Confidante
   class Configuration
-    def initialize(opts)
+    def initialize(opts = {})
       options = {
           overrides: {},
           scope: {},
