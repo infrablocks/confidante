@@ -12,12 +12,14 @@ class Hiera
             "Looking up #{key} in overrides backend with #{resolution_type}")
 
         overrides = scope && scope['overrides']
+        Hiera.debug("Found overrides: #{overrides}")
 
         throw(:no_such_key) unless overrides
 
-        Backend.parse_answer(
-            overrides[key.to_s] || throw(:no_such_key),
-            scope)
+        override = overrides[key.to_s]
+        Hiera.debug("Found override: #{override} for key: #{key}")
+
+        Backend.parse_answer(override || throw(:no_such_key), scope)
       end
     end
   end
