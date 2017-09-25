@@ -27,6 +27,12 @@ describe Hiera::Backend::Overrides_backend do
     expect(Hiera)
         .to(have_received(:debug)
                 .with("Looking up #{key} in overrides backend with #{resolution_type}"))
+    expect(Hiera)
+        .to(have_received(:debug)
+                .with("Found overrides: #{scope['overrides']}"))
+    expect(Hiera)
+        .to(have_received(:debug)
+                .with("Found override: #{scope['overrides']['some_thing']} for key: #{key}"))
   end
 
   it 'returns the value from the overrides key in scope after parsing with other backends' do
