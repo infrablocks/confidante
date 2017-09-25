@@ -88,4 +88,35 @@ describe Confidante::Configuration do
                         }
                     }))
   end
+
+  it 'converts overrides to a hash using to_hash when supported' do
+    expected_value = 'value'
+
+    hiera = double
+    overrides = double
+    overrides_hash = {some_important_value: expected_value}
+
+    allow(hiera).to(receive(:lookup).and_return(expected_value))
+    allow(overrides)
+        .to(receive(:to_h)
+                .and_return(overrides_hash))
+
+    configuration = Confidante::Configuration.new(hiera: hiera)
+                        .for_overrides(overrides)
+
+    actual_value = configuration.some_important_value
+
+    expect(actual_value).to(equal(expected_value))
+    expect(hiera)
+        .to(have_received(:lookup)
+                .with(
+                    'some_important_value',
+                    nil,
+                    {
+                        'cwd' => Dir.pwd,
+                        'overrides' => {
+                            'some_important_value' => expected_value
+                        }
+                    }))
+  end
 end

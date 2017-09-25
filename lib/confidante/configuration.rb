@@ -39,7 +39,7 @@ module Confidante
           nil,
           {'cwd' => Dir.pwd}
               .merge(@scope.stringify_keys)
-              .merge({'overrides' => @overrides.stringify_keys}))
+              .merge({'overrides' => @overrides.to_h.stringify_keys}))
     end
   end
 end
