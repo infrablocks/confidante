@@ -35,6 +35,39 @@ release a new version, update the version number in `version.rb`, and then run
 git commits and tags, and push the `.gem` file to 
 [rubygems.org](https://rubygems.org).
 
+### Common Tasks
+
+#### Generating an SSH key pair
+
+To generate an SSH key pair:
+
+```
+ssh-keygen -m PEM -t rsa -b 4096 -C maintainers@infrablocks.io -N '' -f config/secrets/ci/ssh
+```
+
+#### Managing CircleCI keys
+
+To encrypt a GPG key for use by CircleCI:
+
+```bash
+openssl aes-256-cbc \
+  -e \
+  -md sha1 \
+  -in ./config/secrets/ci/gpg.private \
+  -out ./.circleci/gpg.private.enc \
+  -k "<passphrase>"
+```
+
+To check decryption is working correctly:
+
+```bash
+openssl aes-256-cbc \
+  -d \
+  -md sha1 \
+  -in ./.circleci/gpg.private.enc \
+  -k "<passphrase>"
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at 
