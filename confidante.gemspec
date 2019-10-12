@@ -29,7 +29,9 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'hiera', '~> 3.3', '>= 3.3.1'
   spec.add_dependency 'activesupport', '>= 5.2'
-  spec.add_dependency 'shikashi', '~> 0.6'
+  spec.add_dependency 'shikashi',
+      :git => 'https://github.com/tario/shikashi.git',
+      :ref => '171e068'
 
   spec.add_development_dependency 'bundler', '~> 2.0'
   spec.add_development_dependency 'rake', '~> 13.0'
