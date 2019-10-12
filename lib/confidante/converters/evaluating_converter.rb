@@ -1,6 +1,13 @@
+require 'shikashi'
+
 module Confidante
   module Converters
     class EvaluatingConverter
+      def initialize
+        @sandbox = Shikashi::Sandbox.new
+        @privileges = Shikashi::Privileges.new
+      end
+
       def convert(thing)
         case thing
         when Hash
@@ -26,8 +33,8 @@ module Confidante
 
       def convert_item(thing)
         begin
-          eval(thing, binding)
-        rescue
+          @sandbox.run(@privileges, thing)
+        rescue Exception
           thing
         end
       end
