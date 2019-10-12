@@ -1,3 +1,3 @@
 module Confidante
-  VERSION = '0.11.0'
+  VERSION = '0.12.0.pre.1'
 end
