@@ -24,13 +24,13 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.3'
+  spec.required_ruby_version = '>= 2.4.7'
 
   spec.add_dependency 'hiera', '~> 3.3', '>= 3.3.1'
-  spec.add_dependency 'activesupport', '>= 4.0.2'
+  spec.add_dependency 'activesupport', '>= 5.2'
 
-  spec.add_development_dependency 'bundler', '~> 1.14'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'gem-release', '~> 0.7'
+  spec.add_development_dependency 'bundler', '~> 2.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
+  spec.add_development_dependency 'rspec', '~> 3.9'
+  spec.add_development_dependency 'gem-release', '~> 2.0'
 end

@@ -119,4 +119,34 @@ describe Confidante::Configuration do
                         }
                     }))
   end
+
+  it 'applies converters to looked up values when provided' do
+    lookup_value = {
+        key: "[{:key1 => \"value1\", :key2 => \"value2\"}]",
+        nested: {
+          key: "[{:key1 => \"value1\", :key2 => \"value2\"}]",
+        },
+        embedded: ["{:key1 => \"value1\"}", "{:key2 => \"value2\"}"]
+    }
+    expected_value = {
+        key: [{:key1 => "value1", :key2 => "value2"}],
+        nested: {
+            key: [{:key1 => "value1", :key2 => "value2"}]
+        },
+        embedded: [{:key1 => "value1"}, {:key2 => "value2"}]
+    }
+
+    hiera = double
+
+    allow(hiera).to(receive(:lookup).and_return(lookup_value))
+
+    configuration = Confidante::Configuration.new(
+        hiera: hiera,
+        converters: [Confidante::Converters::EvaluatingConverter.new]
+    )
+
+    actual_value = configuration.some_value
+
+    expect(actual_value).to(eq(expected_value))
+  end
 end

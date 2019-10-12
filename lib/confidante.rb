@@ -1,4 +1,5 @@
 require 'confidante/version'
+require 'confidante/converters'
 require 'confidante/configuration'
 
 require 'hiera/backend/env_backend'
