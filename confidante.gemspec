@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'hiera', '~> 3.3', '>= 3.3.1'
   spec.add_dependency 'activesupport', '>= 4.0.2'
+  spec.add_dependency 'vault'
 
   spec.add_development_dependency 'bundler', '~> 1.14'
   spec.add_development_dependency 'rake', '~> 10.0'
