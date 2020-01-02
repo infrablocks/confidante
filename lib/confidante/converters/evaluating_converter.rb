@@ -32,9 +32,13 @@ module Confidante
       end
 
       def convert_item(thing)
-        begin
-          @sandbox.run(@privileges, thing)
-        rescue Exception
+        if thing =~ /^[\[,{]/
+          begin
+            @sandbox.run(@privileges, thing)
+          rescue Exception
+            thing
+          end
+        else
           thing
         end
       end

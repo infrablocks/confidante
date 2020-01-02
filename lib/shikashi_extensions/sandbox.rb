@@ -1,11 +1,11 @@
 require 'shikashi'
 
-module Shikashi
-  module SandboxPatch
+module ShikashiExtensions
+  module Sandbox
     def timeout(*args, &block)
       ::Timeout.timeout(*args, &block)
     end
   end
 end
 
-Shikashi::Sandbox.include(Shikashi::SandboxPatch)
+Shikashi::Sandbox.include(ShikashiExtensions::Sandbox)
