@@ -2,14 +2,14 @@ PATH
   remote: .
   specs:
     confidante (0.15.0)
-      activesupport (>= 5.2)
+      activesupport (>= 4)
       hiera (~> 3.3, >= 3.3.1)
       shikashi (~> 0.6)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.2.3)
+    activesupport (5.2.4.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -21,10 +21,10 @@ GEM
       sexp_processor (~> 4.0)
     gem-release (2.0.4)
     getsource (0.2.2)
-    hiera (3.5.0)
-    i18n (1.7.0)
+    hiera (3.6.0)
+    i18n (1.8.2)
       concurrent-ruby (~> 1.0)
-    minitest (5.12.2)
+    minitest (5.14.0)
     partialruby (0.3.0)
       ruby2ruby (~> 2)
       ruby_parser (~> 3)
@@ -45,14 +45,14 @@ GEM
     ruby2ruby (2.4.4)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.6)
-    ruby_parser (3.14.0)
+    ruby_parser (3.14.1)
       sexp_processor (~> 4.9)
     sexp_processor (4.13.0)
     shikashi (0.6.0)
       evalhook (>= 0.6.0)
       getsource (>= 0.1.0)
     thread_safe (0.3.6)
-    tzinfo (1.2.5)
+    tzinfo (1.2.6)
       thread_safe (~> 0.1)
 
 PLATFORMS
