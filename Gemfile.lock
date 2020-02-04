@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    confidante (0.15.0)
+    confidante (0.16.0.pre.1)
       activesupport (>= 4)
       hiera (~> 3.3, >= 3.3.1)
       shikashi (~> 0.6)
@@ -66,4 +66,4 @@ DEPENDENCIES
   rspec (~> 3.9)
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
