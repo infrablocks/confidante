@@ -18,8 +18,8 @@ Gem::Specification.new do |spec|
   spec.homepage = 'https://github.com/infrablocks/confidante'
   spec.license = 'MIT'
 
-  spec.files = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
+  spec.files = `git ls-files -z`.split("\x0").select do |f|
+    f.match(%r{^(bin|lib|CODE_OF_CONDUCT\.md|confidante\.gemspec|Gemfile|LICENSE\.txt|Rakefile|README\.md)})
   end
   spec.bindir = 'exe'
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake_circle_ci', '~> 0.3'
   spec.add_development_dependency 'rake_github', '~> 0.3'
   spec.add_development_dependency 'rake_ssh', '~> 0.2'
+  spec.add_development_dependency 'rake_gpg', '~> 0.12'
   spec.add_development_dependency 'rspec', '~> 3.9'
   spec.add_development_dependency 'gem-release', '~> 2.0'
 end
