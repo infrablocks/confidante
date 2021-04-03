@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'shikashi'
 
 module Confidante
@@ -35,7 +37,7 @@ module Confidante
         if thing =~ /^[\[,{]/
           begin
             @sandbox.run(@privileges, thing)
-          rescue Exception
+          rescue StandardError
             thing
           end
         else

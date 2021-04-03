@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'confidante/version'
 require_relative 'confidante/converters'
 require_relative 'confidante/configuration'
