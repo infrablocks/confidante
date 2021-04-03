@@ -15,4 +15,5 @@ git pull
 ./go release
 
 git status
+git push --all
 git push --tags

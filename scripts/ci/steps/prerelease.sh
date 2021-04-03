@@ -13,4 +13,5 @@ cd "$PROJECT_DIR"
 ./go release
 
 git status
+git push --all
 git push --tags
