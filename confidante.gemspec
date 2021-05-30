@@ -19,8 +19,8 @@ files = %w[
 Gem::Specification.new do |spec|
   spec.name = 'confidante'
   spec.version = Confidante::VERSION
-  spec.authors = ['Toby Clemson']
-  spec.email = ['tobyclemson@gmail.com']
+  spec.authors = ['InfraBlocks Maintainers']
+  spec.email = ['maintainers@infrablocks.io']
 
   spec.summary = 'A configuration engine over hiera.'
   spec.description =
