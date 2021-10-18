@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    confidante (0.28.0.pre.6)
+    confidante (0.28.0.pre.7)
       activesupport (>= 4)
       hiera (>= 3.3, < 4)
       shikashi (>= 0.6, < 1)
