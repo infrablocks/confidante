@@ -35,7 +35,7 @@ describe Hiera::Backend::Env_backend do
     expect(Hiera)
       .to(have_received(:debug)
                 .with("Looking up #{key} in environment backend " \
-"with #{resolution_type}"))
+                      "with #{resolution_type}"))
   end
 
   it 'returns the value from the environment variable after parsing ' \

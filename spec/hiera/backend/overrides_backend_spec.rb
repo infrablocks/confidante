@@ -36,14 +36,14 @@ describe Hiera::Backend::Overrides_backend do
     expect(Hiera)
       .to(have_received(:debug)
                 .with("Looking up #{key} in overrides backend " \
-                        "with #{resolution_type}"))
+                      "with #{resolution_type}"))
     expect(Hiera)
       .to(have_received(:debug)
                 .with("Found overrides: #{scope['overrides']}"))
     expect(Hiera)
       .to(have_received(:debug)
                 .with("Found override: #{scope['overrides']['some_thing']} " \
-                        "for key: #{key}"))
+                      "for key: #{key}"))
   end
   # rubocop:enable RSpec/MultipleExpectations
 
