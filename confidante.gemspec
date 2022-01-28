@@ -16,7 +16,7 @@ files = %w[
   README.md
 ]
 
-Gem::Specification.new do |spec|
+Gem::Specification.new do |spec| # rubocop:disable Gemspec/RequireMFA
   spec.name = 'confidante'
   spec.version = Confidante::VERSION
   spec.authors = ['InfraBlocks Maintainers']
