@@ -14,6 +14,16 @@ jobs:
     steps:
     - checkout
     - run: ./scripts/ci/steps/test.sh
+  merge_pull_request:
+    working_directory: ~/source
+    docker:
+      - image: ruby:2.6.0
+    steps:
+      - checkout
+      - run: ./scripts/ci/common/install-git-crypt.sh
+      - run: ./scripts/ci/common/install-gpg-key.sh
+      - run: ./scripts/ci/common/configure-git.sh
+      - run: ./scripts/ci/steps/merge-pull-request.sh
   prerelease:
     working_directory: ~/source
     docker:
@@ -47,23 +57,29 @@ workflows:
         - build
         filters:
           branches:
-            only: [master, /^dependabot.*/]
+            only: [main, /^dependabot.*/]
+    - merge_pull_request:
+        requires:
+          - test
+        filters:
+          branches:
+            only: /^dependabot.*/
     - prerelease:
         requires:
         - test
         filters:
           branches:
-            only: master
+            only: main
     - hold:
         type: approval
         requires:
         - prerelease
         filters:
           branches:
-            only: master
+            only: main
     - release:
         requires:
         - hold
         filters:
           branches:
-            only: master
+            only: main
