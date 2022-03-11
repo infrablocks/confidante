@@ -4,8 +4,8 @@ require 'shikashi'
 
 module ShikashiExtensions
   module Sandbox
-    def timeout(*args, &block)
-      ::Timeout.timeout(*args, &block)
+    def timeout(...)
+      ::Timeout.timeout(...)
     end
   end
 end

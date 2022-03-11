@@ -16,7 +16,7 @@ files = %w[
   README.md
 ]
 
-Gem::Specification.new do |spec| # rubocop:disable Gemspec/RequireMFA
+Gem::Specification.new do |spec|
   spec.name = 'confidante'
   spec.version = Confidante::VERSION
   spec.authors = ['InfraBlocks Maintainers']
@@ -36,11 +36,11 @@ Gem::Specification.new do |spec| # rubocop:disable Gemspec/RequireMFA
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.6.0'
+  spec.required_ruby_version = '>= 2.7'
 
   spec.add_dependency 'activesupport', '>= 4'
-  spec.add_dependency 'hiera', '>= 3.3', '< 4'
-  spec.add_dependency 'shikashi', '>= 0.6', '< 1'
+  spec.add_dependency 'hiera', '~> 3.3'
+  spec.add_dependency 'shikashi', '~> 0.6'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'gem-release'
@@ -54,4 +54,5 @@ Gem::Specification.new do |spec| # rubocop:disable Gemspec/RequireMFA
   spec.add_development_dependency 'rubocop-rake'
   spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end
