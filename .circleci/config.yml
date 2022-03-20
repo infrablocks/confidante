@@ -1,85 +1,155 @@
 version: 2.1
+
+orbs:
+  slack: circleci/slack@4.4.2
+
 jobs:
   build:
     working_directory: ~/source
     docker:
-    - image: ruby:2.7.5
+      - image: ruby:2.7.5
     steps:
-    - checkout
-    - run: ./scripts/ci/steps/build.sh
+      - checkout
+      - run: ./scripts/ci/steps/build.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: SLACK_FAILURE_NOTIFICATION
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: SLACK_SUCCESS_NOTIFICATION
   test:
     working_directory: ~/source
     docker:
-    - image: ruby:2.7.5
+      - image: ruby:2.7.5
     steps:
-    - checkout
-    - run: ./scripts/ci/steps/test.sh
+      - checkout
+      - run: ./scripts/ci/steps/test.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: SLACK_FAILURE_NOTIFICATION
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: SLACK_SUCCESS_NOTIFICATION
+
+  prerelease:
+    working_directory: ~/source
+    docker:
+      - image: ruby:2.7.5
+    steps:
+      - checkout
+      - run: ./scripts/ci/common/install-git-crypt.sh
+      - run: ./scripts/ci/common/install-gpg-key.sh
+      - run: ./scripts/ci/common/configure-git.sh
+      - run: ./scripts/ci/common/configure-rubygems.sh
+      - run: ./scripts/ci/steps/prerelease.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: SLACK_FAILURE_NOTIFICATION
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: SLACK_SUCCESS_NOTIFICATION
+
+  release:
+    working_directory: ~/source
+    docker:
+      - image: ruby:2.7.5
+    steps:
+      - checkout
+      - run: ./scripts/ci/common/install-git-crypt.sh
+      - run: ./scripts/ci/common/install-gpg-key.sh
+      - run: ./scripts/ci/common/configure-git.sh
+      - run: ./scripts/ci/common/configure-rubygems.sh
+      - run: ./scripts/ci/steps/release.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: SLACK_FAILURE_NOTIFICATION
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: SLACK_SUCCESS_NOTIFICATION
+
   merge_pull_request:
     working_directory: ~/source
     docker:
-      - image: ruby:2.6.0
+      - image: ruby:2.7.5
     steps:
       - checkout
       - run: ./scripts/ci/common/install-git-crypt.sh
       - run: ./scripts/ci/common/install-gpg-key.sh
       - run: ./scripts/ci/common/configure-git.sh
       - run: ./scripts/ci/steps/merge-pull-request.sh
-  prerelease:
-    working_directory: ~/source
-    docker:
-    - image: ruby:2.7.5
-    steps:
-    - checkout
-    - run: ./scripts/ci/common/install-git-crypt.sh
-    - run: ./scripts/ci/common/install-gpg-key.sh
-    - run: ./scripts/ci/common/configure-git.sh
-    - run: ./scripts/ci/common/configure-rubygems.sh
-    - run: ./scripts/ci/steps/prerelease.sh
-  release:
-    working_directory: ~/source
-    docker:
-    - image: ruby:2.7.5
-    steps:
-    - checkout
-    - run: ./scripts/ci/common/install-git-crypt.sh
-    - run: ./scripts/ci/common/install-gpg-key.sh
-    - run: ./scripts/ci/common/configure-git.sh
-    - run: ./scripts/ci/common/configure-rubygems.sh
-    - run: ./scripts/ci/steps/release.sh
+      - slack/notify:
+          event: fail
+          channel: dev
+          template: SLACK_FAILURE_NOTIFICATION
+      - slack/notify:
+          event: pass
+          channel: builds
+          template: SLACK_SUCCESS_NOTIFICATION
 
 workflows:
   version: 2
   pipeline:
     jobs:
-    - build
-    - test:
-        requires:
-        - build
-        filters:
-          branches:
-            only: [main, /^dependabot.*/]
-    - merge_pull_request:
-        requires:
-          - test
-        filters:
-          branches:
-            only: /^dependabot.*/
-    - prerelease:
-        requires:
-        - test
-        filters:
-          branches:
-            only: main
-    - hold:
-        type: approval
-        requires:
-        - prerelease
-        filters:
-          branches:
-            only: main
-    - release:
-        requires:
-        - hold
-        filters:
-          branches:
-            only: main
+      - build:
+          context:
+            - slack
+      - test:
+          context:
+            - slack
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
+                - /^dependabot.*/
+      - merge_pull_request:
+          context:
+            - slack
+          requires:
+            - test
+          filters:
+            branches:
+              only: /^dependabot.*/
+      - prerelease:
+          context:
+            - slack
+          requires:
+            - test
+          filters:
+            branches:
+              only: main
+      - slack/on-hold:
+          context:
+            - slack
+          requires:
+            - prerelease
+          filters:
+            branches:
+              only: main
+          channel: dev
+          template: SLACK_ON_HOLD_NOTIFICATION
+      - hold:
+          type: approval
+          requires:
+            - prerelease
+            - slack/on-hold
+          filters:
+            branches:
+              only: main
+      - release:
+          context:
+            - slack
+          requires:
+            - hold
+          filters:
+            branches:
+              only: main
