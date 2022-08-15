@@ -10,9 +10,7 @@ class Hiera
         Hiera.debug('Hiera vault backend starting')
       end
 
-      def lookup(key, scope, _order_override, resolution_type, _context)
-
-      end
+      def lookup(key, scope, _order_override, resolution_type, _context); end
     end
     # rubocop:enable Naming/ClassAndModuleCamelCase
   end

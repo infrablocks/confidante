@@ -10,7 +10,7 @@ describe Hiera::Backend::Vault_backend do
   end
 
   it 'fetches kv secret from vault' do
-    stub_config(vault: {path: '/some/path'})
+    stub_config(vault: { path: '/some/path' })
 
     key = 'some-secret'
     scope = {}
@@ -22,9 +22,9 @@ describe Hiera::Backend::Vault_backend do
   end
 
   it 'uses local credentials' do
-    address = "https://secrets-management-vault-mypulse-management-xenon.mypulse-management.mypulse.technology"
+    address = 'https://secrets-management-vault-mypulse-management-xenon.mypulse-management.mypulse.technology'
     client = Vault::Client.new(address: address)
-    data = client.kv.read("kv/ci-server/mypulse-management-default/slack_builds_webhook_url")
+    data = client.kv('kv').read('/ci-server/mypulse-management-default/slack_builds_webhook_url').data[:value]
 
     expect(data).not_to(be_nil)
   end
