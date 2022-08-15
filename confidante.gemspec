@@ -41,6 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '>= 4'
   spec.add_dependency 'hiera', '~> 3.3'
   spec.add_dependency 'shikashi', '~> 0.6'
+  spec.add_dependency 'vault', '~> 0.17.0'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'gem-release'

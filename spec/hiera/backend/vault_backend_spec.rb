@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'vault'
 
 describe Hiera::Backend::Vault_backend do
   before do
@@ -18,7 +19,14 @@ describe Hiera::Backend::Vault_backend do
     backend = described_class.new
 
     backend.lookup(key, scope, nil, resolution_type, nil)
-    
+  end
+
+  it 'uses local credentials' do
+    address = "https://secrets-management-vault-mypulse-management-xenon.mypulse-management.mypulse.technology"
+    client = Vault::Client.new(address: address)
+    data = client.kv.read("kv/ci-server/mypulse-management-default/slack_builds_webhook_url")
+
+    expect(data).not_to(be_nil)
   end
 
   def stub_hiera
