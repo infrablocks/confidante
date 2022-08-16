@@ -9,15 +9,17 @@ class Hiera
     class Vault_backend
       def initialize
         Hiera.debug('Hiera vault backend starting')
-
-        @client = Vault::Client.new
       end
 
       def lookup(key, scope, _order_override, resolution_type, _context)
         Hiera.debug("Looking up #{key} in vault backend " \
                     "with #{resolution_type}")
 
-        secret = @client.kv('kv').read(key)
+        vault_config = Backend.parse_answer(Config[:vault], scope)
+        vault_address = vault_config[:address]
+        vault_client = Vault::Client.new(address: vault_address)
+
+        secret = vault_client.kv('kv').read(key)
         throw(:no_such_key) unless secret
 
         value = secret.data[:value]
