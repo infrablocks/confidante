@@ -8,6 +8,7 @@ require_relative 'shikashi_extensions/sandbox'
 
 require_relative 'hiera/backend/env_backend'
 require_relative 'hiera/backend/overrides_backend'
+require_relative 'hiera/backend/vault_backend'
 
 module Confidante
   def self.configuration(opts = {})
