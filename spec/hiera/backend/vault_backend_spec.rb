@@ -123,7 +123,51 @@ describe Hiera::Backend::Vault_backend do
 
     secret = create_secret(vault_value)
 
-    allow(kv).to(receive(:read).with(path + '/' + key).and_return(secret))
+    allow(kv).to(receive(:read).with("#{path}/#{key}").and_return(secret))
+
+    result = vault_backend.lookup(
+      key,
+      scope,
+      nil,
+      :priority,
+      nil
+    )
+
+    expect(result).to(eq(vault_value))
+  end
+
+  it 'reads the kv value from multiple sources' do
+    missing_one = 'some/path'
+    missing_two = 'other/path'
+
+    path = 'very/secret'
+
+    vault_value = 'unprocessed-value'
+    key = 'some_thing'
+    scope = {}
+
+    kv = instance_double(Vault::KV)
+    secret = create_secret(vault_value)
+
+    vault_config = create_vault_config(
+      sources:
+        [
+          create_kv_source('some-mount', missing_one),
+          create_kv_source('mount', path),
+          create_kv_source('other-mount', missing_two)
+        ]
+    )
+    stub_hiera_config(vault: vault_config)
+
+    allow(kv).to(receive(:read).with("#{missing_one}/#{key}").and_return(nil))
+    allow(kv).to(receive(:read).with("#{missing_two}/#{key}").and_return(nil))
+    allow(kv).to(receive(:read).with("#{path}/#{key}").and_return(secret))
+
+    client = stub_vault_client
+
+    allow(client).to(receive(:kv).and_return(kv))
+
+    vault_backend = described_class.new
 
     result = vault_backend.lookup(
       key,
@@ -232,7 +276,8 @@ describe Hiera::Backend::Vault_backend do
     client
   end
 
-  def stub_vault_kv(client = stub_vault_client, mount = DEFAULT_MOUNT)
+  def stub_vault_kv(client = stub_vault_client,
+                    mount = DEFAULT_MOUNT)
     kv = instance_double(Vault::KV)
     allow(kv).to(receive(:read))
     allow(client).to(receive(:kv).with(mount).and_return(kv))

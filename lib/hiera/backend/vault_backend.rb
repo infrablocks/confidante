@@ -19,25 +19,31 @@ class Hiera
         vault_address = vault_config[:address]
         vault_client = Vault::Client.new(address: vault_address)
 
-        source = vault_config[:sources][0]
-
-        throw(:unsupported_secrets_engine) unless source[:engine] == 'kv'
-
-        value = read_kv_value(vault_client, source, key)
+        value = get_value(vault_client, key, vault_config[:sources])
 
         Backend.parse_answer(value, scope)
       end
 
+      def get_value(vault_client, key, sources)
+        found_source = sources.find do |source|
+          read_kv_value(vault_client, source, key)
+        end
+
+        throw(:no_such_key) unless found_source
+
+        read_kv_value(vault_client, found_source, key)
+      end
+
       def read_kv_value(vault_client, source, key)
+        throw(:unsupported_secrets_engine) unless source[:engine] == 'kv'
+
         mount = source[:mount]
-        full_path = source[:path] + '/' + key
+        full_path = "#{source[:path]}/#{key}"
 
         secret = vault_client.kv(mount).read(full_path)
-        throw(:no_such_key) unless secret
+        return nil unless secret
 
-        value = secret.data[:value]
-        throw(:no_such_key) unless value
-        value
+        secret.data[:value]
       end
     end
 

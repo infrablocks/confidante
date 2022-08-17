@@ -12,6 +12,7 @@
 /test/version_tmp/
 /tmp/
 .rakeTasks
+/out
 
 ## Documentation cache and generated files:
 /.yardoc/
