@@ -29,7 +29,10 @@ class Hiera
       end
 
       def read_kv_value(vault_client, source, key)
-        secret = vault_client.kv(source[:mount]).read(key)
+        mount = source[:mount]
+        full_path = source[:path] + '/' + key
+
+        secret = vault_client.kv(mount).read(full_path)
         throw(:no_such_key) unless secret
 
         value = secret.data[:value]

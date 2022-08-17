@@ -3,6 +3,7 @@
 require 'spec_helper'
 
 DEFAULT_MOUNT = 'kv'
+DEFAULT_PATH = 'some/path'
 
 describe Hiera::Backend::Vault_backend do
   before do
@@ -108,7 +109,8 @@ describe Hiera::Backend::Vault_backend do
 
   it 'reads the kv value from vault' do
     mount = 'secretkv'
-    vault_config = create_vault_config(sources: [create_kv_source(mount)])
+    path = 'very/secret'
+    vault_config = create_vault_config(sources: [create_kv_source(mount, path)])
     stub_hiera_config(vault: vault_config)
 
     kv = stub_vault_kv(stub_vault_client, mount)
@@ -121,7 +123,7 @@ describe Hiera::Backend::Vault_backend do
 
     secret = create_secret(vault_value)
 
-    allow(kv).to(receive(:read).and_return(secret))
+    allow(kv).to(receive(:read).with(path + '/' + key).and_return(secret))
 
     result = vault_backend.lookup(
       key,
@@ -248,10 +250,11 @@ describe Hiera::Backend::Vault_backend do
     }.merge(overrides)
   end
 
-  def create_kv_source(mount = DEFAULT_MOUNT)
+  def create_kv_source(mount = DEFAULT_MOUNT, path = DEFAULT_PATH)
     {
       engine: 'kv',
-      mount: mount
+      mount: mount,
+      path: path
     }
   end
 end
