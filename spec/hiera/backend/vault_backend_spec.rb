@@ -2,6 +2,8 @@
 
 require 'spec_helper'
 
+DEFAULT_MOUNT = 'kv'
+
 describe Hiera::Backend::Vault_backend do
   before do
     Hiera.logger = 'noop'
@@ -17,11 +19,12 @@ describe Hiera::Backend::Vault_backend do
             .with('Hiera vault backend starting'))
   end
 
-  it 'uses vault address from hiera config' do
+  it 'uses vault address for kv lookup from hiera config' do
     vault_address = 'https://vault.example.com'
-    vault_config = {
-      address: vault_address
-    }
+    vault_config = create_vault_config(
+      address: vault_address,
+      sources: [create_kv_source]
+    )
     vault_value = 'some-value'
     vault_secret = create_secret(vault_value)
 
@@ -37,7 +40,7 @@ describe Hiera::Backend::Vault_backend do
             .and_return(client))
     allow(client).to(receive(:address=))
 
-    kv = stub_vault_kv_on(client)
+    kv = stub_vault_kv(client)
     allow(kv).to(receive(:read).and_return(vault_secret))
 
     vault_backend = described_class.new
@@ -53,9 +56,28 @@ describe Hiera::Backend::Vault_backend do
     expect(result).to(eq(vault_value))
   end
 
-  it 'logs lookup information on lookup' do
+  it 'throws if unsupported secrets engine is passed' do
+    stub_hiera_config(
+      vault: create_vault_config(sources: [{ engine: 'unsupported' }])
+    )
+    vault_backend = described_class.new
+    key = 'some_thing'
+    scope = {}
+
+    expect do
+      vault_backend.lookup(
+        key,
+        scope,
+        nil,
+        :priority,
+        nil
+      )
+    end.to(throw_symbol(:unsupported_secrets_engine))
+  end
+
+  it 'logs lookup information on kv lookup' do
     stub_hiera_logging
-    stub_hiera_config
+    stub_hiera_config(vault: create_vault_config(sources: [create_kv_source]))
 
     kv = stub_vault_kv
 
@@ -84,10 +106,12 @@ describe Hiera::Backend::Vault_backend do
                   "with #{resolution_type}"))
   end
 
-  it 'reads the value from vault' do
-    stub_hiera_config
+  it 'reads the kv value from vault' do
+    mount = 'secretkv'
+    vault_config = create_vault_config(sources: [create_kv_source(mount)])
+    stub_hiera_config(vault: vault_config)
 
-    kv = stub_vault_kv
+    kv = stub_vault_kv(stub_vault_client, mount)
 
     vault_backend = described_class.new
 
@@ -110,8 +134,8 @@ describe Hiera::Backend::Vault_backend do
     expect(result).to(eq(vault_value))
   end
 
-  it 'returns the recursively parsed value after lookup' do
-    stub_hiera_config
+  it 'returns the recursively parsed value after kv lookup' do
+    stub_hiera_config(vault: create_vault_config(sources: [create_kv_source]))
 
     kv = stub_vault_kv
 
@@ -143,7 +167,7 @@ describe Hiera::Backend::Vault_backend do
   end
 
   it 'throws if the secret cannot be resolved' do
-    stub_hiera_config
+    stub_hiera_config(vault: create_vault_config(sources: [create_kv_source]))
 
     kv = stub_vault_kv
 
@@ -166,7 +190,7 @@ describe Hiera::Backend::Vault_backend do
   end
 
   it 'throws if the secret is missing value' do
-    stub_hiera_config
+    stub_hiera_config(vault: create_vault_config(sources: [create_kv_source]))
 
     kv = stub_vault_kv
 
@@ -194,7 +218,7 @@ describe Hiera::Backend::Vault_backend do
   end
 
   def stub_hiera_config(
-    config = { vault: { address: 'https://vault.example.com' } }
+    config = { vault: create_vault_config }
   )
     allow(Hiera::Config).to(receive(:[]) { |key| config[key] })
     allow(Hiera::Backend).to(receive(:parse_answer).and_call_original)
@@ -206,18 +230,28 @@ describe Hiera::Backend::Vault_backend do
     client
   end
 
-  def stub_vault_kv_on(client)
+  def stub_vault_kv(client = stub_vault_client, mount = DEFAULT_MOUNT)
     kv = instance_double(Vault::KV)
     allow(kv).to(receive(:read))
-    allow(client).to(receive(:kv).and_return(kv))
+    allow(client).to(receive(:kv).with(mount).and_return(kv))
     kv
-  end
-
-  def stub_vault_kv
-    stub_vault_kv_on(stub_vault_client)
   end
 
   def create_secret(value)
     Vault::Secret.new({ data: { value: value } })
+  end
+
+  def create_vault_config(overrides = {})
+    {
+      address: 'https://vault.example.com',
+      sources: []
+    }.merge(overrides)
+  end
+
+  def create_kv_source(mount = DEFAULT_MOUNT)
+    {
+      engine: 'kv',
+      mount: mount
+    }
   end
 end

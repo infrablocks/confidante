@@ -19,15 +19,25 @@ class Hiera
         vault_address = vault_config[:address]
         vault_client = Vault::Client.new(address: vault_address)
 
-        secret = vault_client.kv('kv').read(key)
+        source = vault_config[:sources][0]
+
+        throw(:unsupported_secrets_engine) unless source[:engine] == 'kv'
+
+        value = read_kv_value(vault_client, source, key)
+
+        Backend.parse_answer(value, scope)
+      end
+
+      def read_kv_value(vault_client, source, key)
+        secret = vault_client.kv(source[:mount]).read(key)
         throw(:no_such_key) unless secret
 
         value = secret.data[:value]
         throw(:no_such_key) unless value
-
-        Backend.parse_answer(value, scope)
+        value
       end
     end
+
     # rubocop:enable Naming/ClassAndModuleCamelCase
   end
 end
