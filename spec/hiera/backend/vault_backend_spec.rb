@@ -57,6 +57,25 @@ describe Hiera::Backend::Vault_backend do
     expect(result).to(eq(vault_value))
   end
 
+  it 'throws if no vault address is passed' do
+    stub_hiera_config(
+      vault: create_vault_config(address: nil)
+    )
+    vault_backend = described_class.new
+    key = 'some_thing'
+    scope = {}
+
+    expect do
+      vault_backend.lookup(
+        key,
+        scope,
+        nil,
+        :priority,
+        nil
+      )
+    end.to(throw_symbol(:no_vault_address_provided))
+  end
+
   it 'throws if unsupported secrets engine is passed' do
     stub_hiera_config(
       vault: create_vault_config(sources: [{ engine: 'unsupported' }])

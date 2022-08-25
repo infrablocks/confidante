@@ -17,10 +17,11 @@ class Hiera
 
         vault_config = Backend.parse_answer(Config[:vault], scope)
         vault_address = vault_config[:address]
+
+        throw :no_vault_address_provided unless vault_address
+
         vault_client = Vault::Client.new(address: vault_address)
-
         value = get_value(vault_client, key, vault_config[:sources])
-
         Backend.parse_answer(value, scope)
       end
 
