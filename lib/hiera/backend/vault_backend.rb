@@ -19,7 +19,7 @@ class Hiera
         vault_address = vault_config[:address]
 
         if vault_address.nil? || vault_address.empty?
-          Hiera.warn("No vault address provided. Skipping lookup!")
+          Hiera.warn('No vault address provided. Skipping lookup!')
           nil
         else
           vault_client = Vault::Client.new(address: vault_address)

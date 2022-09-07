@@ -66,18 +66,18 @@ describe Hiera::Backend::Vault_backend do
     scope = {}
 
     value = vault_backend.lookup(
-        key,
-        scope,
-        nil,
-        :priority,
-        nil
-      )
-    expect(value).to be nil
+      key,
+      scope,
+      nil,
+      :priority,
+      nil
+    )
+    expect(value).to be_nil
   end
 
   it 'returns nil if empty vault address is passed' do
     stub_hiera_config(
-      vault: create_vault_config(address: "")
+      vault: create_vault_config(address: '')
     )
     vault_backend = described_class.new
     key = 'some_thing'
@@ -91,7 +91,7 @@ describe Hiera::Backend::Vault_backend do
       nil
     )
 
-    expect(value).to be nil
+    expect(value).to be_nil
   end
 
   it 'throws if unsupported secrets engine is passed' do
