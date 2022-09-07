@@ -56,6 +56,7 @@ class Hiera
         mount = source[:mount]
         full_path = "#{source[:path]}/#{key}"
 
+        Hiera.debug("Looking up #{full_path} at #{mount}")
         secret = vault_client.kv(mount).read(full_path)
         return nil unless secret
 
