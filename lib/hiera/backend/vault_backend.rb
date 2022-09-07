@@ -16,26 +16,38 @@ class Hiera
                     "with #{resolution_type}")
 
         vault_config = Backend.parse_answer(Config[:vault], scope)
-        vault_address = vault_config[:address]
 
-        if vault_address.nil? || vault_address.empty?
+        if valid_vault_address?(vault_config)
           Hiera.warn('No vault address provided. Skipping lookup!')
           nil
         else
-          vault_client = Vault::Client.new(address: vault_address)
-          value = get_value(vault_client, key, vault_config[:sources])
-          Backend.parse_answer(value, scope)
+          Backend.parse_answer(get_value(vault_config, key), scope)
         end
       end
 
-      def get_value(vault_client, key, sources)
-        found_source = sources.find do |source|
-          read_kv_value(vault_client, source, key)
+      def valid_vault_address?(vault_config)
+        vault_address = vault_config[:address]
+        vault_address.nil? || vault_address.empty?
+      end
+
+      def get_value(vault_config, key)
+        vault_address = vault_config[:address]
+        vault_client = Vault::Client.new(address: vault_address)
+        get_first_value_from_sources(
+          vault_client,
+          key,
+          vault_config[:sources]
+        )
+      end
+
+      def get_first_value_from_sources(vault_client, key, sources)
+        sources.each do |source|
+          value = read_kv_value(vault_client, source, key)
+
+          return value if value
         end
 
-        throw(:no_such_key) unless found_source
-
-        read_kv_value(vault_client, found_source, key)
+        throw(:no_such_key)
       end
 
       def read_kv_value(vault_client, source, key)
