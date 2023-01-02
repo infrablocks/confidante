@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    confidante (0.28.0)
+    confidante (0.29.0.pre.1)
       activesupport (>= 4)
       hiera (~> 3.3)
       shikashi (~> 0.6)
@@ -160,4 +160,4 @@ DEPENDENCIES
   simplecov
 
 BUNDLED WITH
-   2.3.26
+   2.4.2
