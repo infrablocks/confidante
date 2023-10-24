@@ -35,11 +35,15 @@ GEM
     faraday-net_http (3.0.2)
     gem-release (2.2.2)
     getsource (0.2.2)
+    git (1.18.0)
+      addressable (~> 2.8)
+      rchardet (~> 1.8)
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
     hiera (3.11.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
+    immutable-struct (2.4.1)
     json (2.6.3)
     lino (3.1.0)
       hamster (~> 3.0)
@@ -63,9 +67,18 @@ GEM
       excon (~> 0.72)
       rake_factory (~> 0.23)
       sshkey (~> 2.0)
-    rake_factory (0.31.0)
+    rake_factory (0.32.0.pre.2)
       activesupport (>= 4)
       rake (~> 13.0)
+    rake_git (0.1.0.pre.7)
+      colored2 (~> 3.1)
+      git (~> 1.13, >= 1.13.2)
+      rake_factory (= 0.32.0.pre.2)
+    rake_git_crypt (0.1.0.pre.26)
+      colored2 (~> 3.1)
+      rake_factory (= 0.32.0.pre.2)
+      ruby_git_crypt (= 0.1.0.pre.2)
+      ruby_gpg2 (~> 0.6)
     rake_github (0.11.0)
       colored2 (~> 3.1)
       octokit (>= 4.16, < 7.0)
@@ -78,6 +91,7 @@ GEM
       colored2 (~> 3.1)
       rake_factory (~> 0.23)
       sshkey (~> 2.0)
+    rchardet (1.8.0)
     regexp_parser (2.6.1)
     rexml (3.2.5)
     rspec (3.12.0)
@@ -114,6 +128,9 @@ GEM
     ruby2ruby (2.5.0)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.6)
+    ruby_git_crypt (0.1.0.pre.2)
+      immutable-struct (~> 2.4)
+      lino (~> 3.0)
     ruby_gpg2 (0.10.0)
       lino (~> 3.0)
     ruby_parser (3.19.2)
@@ -140,6 +157,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  arm64-darwin-22
   x86_64-darwin-20
   x86_64-darwin-21
   x86_64-linux
@@ -150,6 +168,8 @@ DEPENDENCIES
   gem-release
   rake
   rake_circle_ci
+  rake_git
+  rake_git_crypt
   rake_github
   rake_gpg
   rake_ssh
@@ -160,4 +180,4 @@ DEPENDENCIES
   simplecov
 
 BUNDLED WITH
-   2.4.2
+   2.4.17
