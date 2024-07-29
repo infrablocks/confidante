@@ -322,7 +322,7 @@ describe Hiera::Backend::Vault_backend do
   end
 
   def create_secret(value)
-    Vault::Secret.new({ data: { value: value } })
+    Vault::Secret.new({ data: { value: } })
   end
 
   def create_vault_config(overrides = {})
@@ -335,8 +335,8 @@ describe Hiera::Backend::Vault_backend do
   def create_kv_source(mount = DEFAULT_MOUNT, path = DEFAULT_PATH)
     {
       engine: 'kv',
-      mount: mount,
-      path: path
+      mount:,
+      path:
     }
   end
 end

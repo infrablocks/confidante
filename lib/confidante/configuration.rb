@@ -19,7 +19,7 @@ module Confidante
 
     def for_overrides(overrides)
       Configuration.new(
-        overrides: overrides,
+        overrides:,
         scope: @scope,
         hiera: @hiera,
         converters: @converters
@@ -29,7 +29,7 @@ module Confidante
     def for_scope(scope)
       Configuration.new(
         overrides: @overrides,
-        scope: scope,
+        scope:,
         hiera: @hiera,
         converters: @converters
       )

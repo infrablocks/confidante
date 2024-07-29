@@ -26,7 +26,7 @@ describe Confidante::Configuration do
             .and_return(expected_value))
 
     configuration = described_class
-                    .new(hiera: hiera)
+                    .new(hiera:)
                     .for_overrides(
                       thing1: 'value1',
                       thing2: 'value2'
@@ -60,7 +60,7 @@ describe Confidante::Configuration do
             .and_return(expected_value))
 
     configuration = described_class
-                    .new(hiera: hiera)
+                    .new(hiera:)
                     .for_scope(
                       role: 'server',
                       environment: 'production'
@@ -92,7 +92,7 @@ describe Confidante::Configuration do
             .and_return(expected_value))
 
     configuration = described_class
-                    .new(hiera: hiera)
+                    .new(hiera:)
                     .for_overrides(
                       thing1: 'value1',
                       thing2: 'value2'
@@ -128,7 +128,7 @@ describe Confidante::Configuration do
             .and_return(overrides_hash))
 
     configuration = described_class
-                    .new(hiera: hiera)
+                    .new(hiera:)
                     .for_overrides(overrides)
 
     actual_value = configuration.some_important_value
@@ -157,7 +157,7 @@ describe Confidante::Configuration do
     allow(hiera).to(receive(:lookup).and_return(lookup_value))
 
     configuration = described_class.new(
-      hiera: hiera,
+      hiera:,
       converters: [Confidante::Converters::EvaluatingConverter.new]
     )
 
