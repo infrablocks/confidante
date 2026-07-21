@@ -34,7 +34,7 @@ module Confidante
       end
 
       def convert_item(thing)
-        if thing =~ /^[\[,{]/
+        if thing.is_a?(String) && thing =~ /^[\[,{]/
           begin
             @sandbox.run(@privileges, thing)
           rescue StandardError
